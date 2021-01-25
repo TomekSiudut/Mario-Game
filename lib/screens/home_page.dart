@@ -4,6 +4,7 @@ import 'package:mario/widgets/button.dart';
 import 'package:mario/widgets/jumping_mario.dart';
 import "dart:async";
 import 'package:mario/widgets/mario.dart';
+import 'package:mario/widgets/mushroom.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,11 +16,23 @@ class _HomePageState extends State<HomePage> {
   double height = 0;
   static double marioX = 0;
   static double marioY = 1;
+  double marioSize = 50;
+  double shroomX = 0.5;
+  double shroomY = 1;
   double initialHeight = marioY;
   String direction = "right";
   bool midrun = false;
   bool midJump = false;
   var gameFont = GoogleFonts.pressStart2p(textStyle: TextStyle(color: Colors.white, fontSize: 20.0));
+
+  void checkMushroom() {
+    if ((marioX - shroomX).abs() < 0.05 && (marioY - shroomY).abs() < 0.05) {
+      setState(() {
+        marioSize = 100;
+        shroomX = 2;
+      });
+    }
+  }
 
   void preJump() {
     time = 0;
@@ -27,28 +40,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   void jump() {
-    preJump();
-    midJump = true;
-    Timer.periodic(Duration(milliseconds: 50), (timer) {
-      time += 0.05;
-      height = -4.9 * time * time + 5 * time;
-      if (initialHeight - height > 1) {
-        midJump = false;
-        setState(() {
-          marioY = 1;
-        });
-        timer.cancel();
-      } else {
-        setState(() {
-          marioY = initialHeight - height;
-        });
-      }
-    });
+    if (midJump == false) {
+      preJump();
+      midJump = true;
+      Timer.periodic(Duration(milliseconds: 50), (timer) {
+        time += 0.05;
+        height = -4.9 * time * time + 5 * time;
+        if (initialHeight - height > 1) {
+          midJump = false;
+          setState(() {
+            marioY = 1;
+          });
+          timer.cancel();
+        } else {
+          setState(() {
+            marioY = initialHeight - height;
+          });
+        }
+      });
+    }
   }
 
   void moveRight() {
     direction = "left";
     midrun = !midrun;
+    checkMushroom();
 
     Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (Button().userIsHoldingButtonNow() == true) {
@@ -68,6 +84,7 @@ class _HomePageState extends State<HomePage> {
   void moveLeft() {
     direction = "right";
     midrun = !midrun;
+    checkMushroom();
 
     Timer.periodic(Duration(milliseconds: 50), (timer) {
       if (Button().userIsHoldingButtonNow() == true) {
@@ -100,30 +117,38 @@ class _HomePageState extends State<HomePage> {
                       child: midJump
                           ? JumpingMario(
                               direction: direction,
+                              size: marioSize,
                             )
-                          : Mario(direction: direction, midrun: midrun))),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text("MARIO", style: gameFont),
-                      Text("0000", style: gameFont),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text("WORLD", style: gameFont),
-                      Text("0000", style: gameFont),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text("TIME", style: gameFont),
-                      Text("0000", style: gameFont),
-                    ],
-                  )
-                ],
+                          : Mario(direction: direction, midrun: midrun, size: marioSize))),
+              Container(alignment: Alignment(shroomX, shroomY), child: Mushroom()),
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Text("MARIO", style: gameFont),
+                        SizedBox(height: 10.0),
+                        Text("0000", style: gameFont),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Text("WORLD", style: gameFont),
+                        SizedBox(height: 10.0),
+                        Text("1-2", style: gameFont),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Text("TIME", style: gameFont),
+                        SizedBox(height: 10.0),
+                        Text("9999", style: gameFont),
+                      ],
+                    )
+                  ],
+                ),
               )
             ])),
         Expanded(
