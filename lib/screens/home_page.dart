@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   String direction = "right";
   bool midrun = false;
   bool midJump = false;
-  var gameFont = GoogleFonts.pressStart2p(textStyle: TextStyle(color: Colors.white, fontSize: 20.0));
+  var gameFont = GoogleFonts.pressStart2p(textStyle: TextStyle(color: Colors.white, fontSize: 25.0));
 
   void checkMushroom() {
     if ((marioX - shroomX).abs() < 0.05 && (marioY - shroomY).abs() < 0.05) {
