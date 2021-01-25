@@ -6,7 +6,10 @@ class Mario extends StatelessWidget {
   final direction;
   final bool midrun;
 
-  Mario({this.direction, this.midrun});
+  Mario({
+    this.direction,
+    this.midrun,
+  });
 
   @override
   Widget build(BuildContext context) {
