@@ -11,9 +11,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double time = 0;
   double height = 0;
-  static double marioX = -1;
+  static double marioX = 0;
   static double marioY = 1;
   double initialHeight = marioY;
+  String direction = "right";
+  bool midrun = false;
 
   void preJump() {
     time = 0;
@@ -23,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   void jump() {
     preJump();
     Timer.periodic(Duration(milliseconds: 50), (timer) {
-      time += 0.05;
+      time += 0.020;
       height = -4.9 * time * time + 5 * time;
       if (initialHeight - height > 1) {
         marioY = 1;
@@ -32,6 +34,22 @@ class _HomePageState extends State<HomePage> {
           marioY = initialHeight - height;
         });
       }
+    });
+  }
+
+  void moveRight() {
+    direction = "left";
+    midrun = !midrun;
+    setState(() {
+      marioX -= 0.02;
+    });
+  }
+
+  void moveLeft() {
+    direction = "right";
+    midrun = !midrun;
+    setState(() {
+      marioX += 0.02;
     });
   }
 
@@ -45,7 +63,9 @@ class _HomePageState extends State<HomePage> {
             child: Container(
                 color: Colors.blue,
                 child: AnimatedContainer(
-                    alignment: Alignment(marioX, marioY), duration: Duration(milliseconds: 0), child: Mario()))),
+                    alignment: Alignment(marioX, marioY),
+                    duration: Duration(milliseconds: 0),
+                    child: Mario(direction: direction, midrun: midrun)))),
         Expanded(
             flex: 1,
             child: Container(
@@ -54,9 +74,9 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Button(child: Icon(Icons.arrow_back, color: Colors.white)),
+                      Button(child: Icon(Icons.arrow_back, color: Colors.white), function: moveRight),
                       Button(child: Icon(Icons.arrow_upward, color: Colors.white), function: jump),
-                      Button(child: Icon(Icons.arrow_forward, color: Colors.white))
+                      Button(child: Icon(Icons.arrow_forward, color: Colors.white), function: moveLeft)
                     ],
                   )),
             ))
