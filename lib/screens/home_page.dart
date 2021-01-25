@@ -47,6 +47,17 @@ class _HomePageState extends State<HomePage> {
   void moveRight() {
     direction = "left";
     midrun = !midrun;
+
+    Timer.periodic(Duration(milliseconds: 50), (timer) {
+      if (Button().userIsHoldingButtonNow() == true) {
+        setState(() {
+          marioX -= 0.02;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+
     setState(() {
       marioX -= 0.02;
     });
@@ -55,6 +66,17 @@ class _HomePageState extends State<HomePage> {
   void moveLeft() {
     direction = "right";
     midrun = !midrun;
+
+    Timer.periodic(Duration(milliseconds: 50), (timer) {
+      if (Button().userIsHoldingButtonNow() == true) {
+        setState(() {
+          marioX += 0.02;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+
     setState(() {
       marioX += 0.02;
     });
