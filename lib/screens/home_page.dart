@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mario/widgets/button.dart';
 import 'package:mario/widgets/jumping_mario.dart';
 import "dart:async";
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   String direction = "right";
   bool midrun = false;
   bool midJump = false;
+  var gameFont = GoogleFonts.pressStart2p(textStyle: TextStyle(color: Colors.white, fontSize: 20.0));
 
   void preJump() {
     time = 0;
@@ -89,16 +91,41 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Expanded(
             flex: 4,
-            child: Container(
-                color: Colors.blue,
-                child: AnimatedContainer(
-                    alignment: Alignment(marioX, marioY),
-                    duration: Duration(milliseconds: 0),
-                    child: midJump
-                        ? JumpingMario(
-                            direction: direction,
-                          )
-                        : Mario(direction: direction, midrun: midrun)))),
+            child: Stack(children: <Widget>[
+              Container(
+                  color: Colors.blue,
+                  child: AnimatedContainer(
+                      alignment: Alignment(marioX, marioY),
+                      duration: Duration(milliseconds: 0),
+                      child: midJump
+                          ? JumpingMario(
+                              direction: direction,
+                            )
+                          : Mario(direction: direction, midrun: midrun))),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text("MARIO", style: gameFont),
+                      Text("0000", style: gameFont),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text("WORLD", style: gameFont),
+                      Text("0000", style: gameFont),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text("TIME", style: gameFont),
+                      Text("0000", style: gameFont),
+                    ],
+                  )
+                ],
+              )
+            ])),
         Expanded(
             flex: 1,
             child: Container(
